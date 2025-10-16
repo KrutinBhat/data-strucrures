@@ -1,62 +1,119 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <math.h>
-
-#define SIZE 10
-
-struct stack {
-    int top;
-    float data[SIZE];
+#define SIZE 5
+struct queue
+{
+    int data[SIZE];
+    int front,rear;
 };
+typedef struct queue QUEUE;
+void enqueue(QUEUE *q,int item)
+{
+    if(q->rear==SIZE-1)
+    {
+        printf("QUEUE overflow- Queue is full!\n");
 
-typedef struct stack STACK;
-
-void push(STACK *s, float item) {
-    s->data[++(s->top)] = item;
-}
-
-float pop(STACK *s) {
-    return s->data[(s->top)--];
-}
-
-float compute(float opr1, char symbol, float opr2) {
-    switch (symbol) {
-        case '+': return opr1 + opr2;
-        case '-': return opr1 - opr2;
-        case '*': return opr1 * opr2;
-        case '/': return opr1 / opr2;
-        case '^': return pow(opr1, opr2);
     }
-    return 0;
-}
-
-float evaluate_postfix(STACK *s, char postfix[20]) {
-    int i;
-    float opr1, opr2, result;
-    char symbol;
-    for (i = 0; postfix[i] != '\0'; i++) {
-        symbol = postfix[i];
-        if (isdigit(symbol))
-            push(s, symbol - '0');
-        else {
-            opr2 = pop(s);
-            opr1 = pop(s);
-            result = compute(opr1, symbol, opr2);
-            push(s, result);
+    else
+    {
+        if(q->front==-1)
+        {
+            q->front=0;
         }
+        q->rear++;
+        q->data[q->rear]=item;
+        printf("Inserted %d into queue.\n",item);
     }
-    return pop(s);
 }
+int dequeue(QUEUE *q)
+{
+    if(q->front==-1)
+    {
+        printf("Queue underflow-Queue is empty!\n");
+        return -1;
+    }
+    else
+    {
+        int deleted = q->data[q->front];
+        if(q->front==q->rear)
+        {
+            q->front=-1;
+            q->rear=-1;
+        }
+        else
+        {
+            q->front++;
+        }
+        return deleted;
+    }
+}
+void display(QUEUE q)
+{
+    int i;
+    if(q.front ==-1)
+    {
+        printf("Queue is empty\n");
+    }
+    else
+    {
+        printf("Queue contents are:\n");
+        for(i=q.front;i<=q.rear;i++)
+        {
+            printf("%d\t",q.data[i]);
+        }
+        printf("\n");
 
-int main() {
-    char postfix[20];
-    STACK s;
-    s.top = -1;
-    float result;
-    printf("\nRead postfix expression\n");
-    scanf("%s", postfix);
-    result = evaluate_postfix(&s, postfix);
-    printf("\nThe result is %f\n", result);
+    }
+
+}
+int main()
+{
+    int item,ch;
+    QUEUE q;
+    q.front=-1;
+    q.rear=-1;
+    while(1)
+    {
+        printf("\n-------Queue Operations------\n");
+        printf("1.Enqueue\n 2.Dequeue\n 3.Display\n 4.Exit\n");
+        printf("\n Enter your choice:");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:printf("\n Enter element to be inserted:");
+            scanf("%d",&item);
+            enqueue(&q,item);
+            break;
+            case 2:item=dequeue(&q);
+            if(item!=-1)
+            {
+                printf("\n Deleted element is%d\n",item);
+            }
+            break;
+            case 3:display(q);
+            break;
+            case 4:printf("\nExiting program.....\n");
+            exit(0);
+            default:printf("\n Invalid choice! Please try again.\n");
+        }
+
+    }
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
