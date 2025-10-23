@@ -1,62 +1,78 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <math.h>
-
-#define SIZE 10
-
-struct stack {
-    int top;
-    float data[SIZE];
-};
-
+#define SIZE 5
+struct stack{
+int top = -1;
+int data[SIZE];};
 typedef struct stack STACK;
-
-void push(STACK *s, float item) {
-    s->data[++(s->top)] = item;
-}
-
-float pop(STACK *s) {
-    return s->data[(s->top)--];
-}
-
-float compute(float opr1, char symbol, float opr2) {
-    switch (symbol) {
-        case '+': return opr1 + opr2;
-        case '-': return opr1 - opr2;
-        case '*': return opr1 * opr2;
-        case '/': return opr1 / opr2;
-        case '^': return pow(opr1, opr2);
+void push(STACK *s,int item)
+{
+    if(s->top==SIZE-1)
+        printf("\n stack overflow");
+    else
+    {
+        s->top=s->top+1;
+        s->data[s->top]=item;
     }
-    return 0;
 }
-
-float evaluate_postfix(STACK *s, char postfix[20]) {
+void pop(STACK *s)
+{
+    if(s->top==-1)
+        printf("\n stack underflow");
+    else
+    {
+        printf("\n element popped is%d",s->data[s->top]);
+        s->top=s->top-1;
+    }
+}
+void display(STACK s)
+{
     int i;
-    float opr1, opr2, result;
-    char symbol;
-    for (i = 0; postfix[i] != '\0'; i++) {
-        symbol = postfix[i];
-        if (isdigit(symbol))
-            push(s, symbol - '0');
-        else {
-            opr2 = pop(s);
-            opr1 = pop(s);
-            result = compute(opr1, symbol, opr2);
-            push(s, result);
+    if(s.top==-1)
+        printf("\n stack is empty");
+    else
+    {
+        printf("\n stack content are\n");
+        for(i=s.top;i>=0;i--)
+            printf("%d\n",s.data[i]);
+    }
+}
+int main()
+{
+    int ch,item;
+    STACK s;
+    s.top=-1;
+    for(;;)
+    {
+        printf("\n 1.push");
+        printf("\n 2.pop");
+        printf("\n 3.display");
+        printf("\n 4.exit");
+        printf("\n Read choice");
+        scanf("%d",&ch);
+
+        switch(ch)
+        {
+        case 1: printf("\n read element to be pushed");
+        scanf("%d",&item);
+        push(&s,item);
+        break;
+        case 2: pop(&s);
+        break;
+
+        case 3: display(s);
+        break;
+
+        default:exit(0);
         }
     }
-    return pop(s);
-}
-
-int main() {
-    char postfix[20];
-    STACK s;
-    s.top = -1;
-    float result;
-    printf("\nRead postfix expression\n");
-    scanf("%s", postfix);
-    result = evaluate_postfix(&s, postfix);
-    printf("\nThe result is %f\n", result);
     return 0;
 }
+
+
+
+
+
+
+
+
